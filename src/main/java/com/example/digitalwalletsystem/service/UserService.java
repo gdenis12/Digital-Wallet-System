@@ -44,8 +44,15 @@ public class UserService {
     }
 
     public void changePassword(Long userId, String newRawPassword){
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("user not found"));
+
+        String encodedPassword = passwordEncoder.encode(newRawPassword);
+
+        user.setPassword(encodedPassword);
+
+        userRepository.save(user);
     }
 
     public void blockUser(Long userId){
