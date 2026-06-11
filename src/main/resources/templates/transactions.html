@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions — Digital Wallet</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style type="text/tailwindcss">
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 2px; }
+        .form-input, .form-select {
+            background: #0f0f11;
+            border: 1px solid #27272a;
+            border-radius: 9px;
+            padding: 8px 12px;
+            font-size: 13px;
+            color: #e4e4e7;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .form-input:focus, .form-select:focus { border-color: #4f46e5; }
+        .form-select option { background: #111113; }
+    </style>
+</head>
+<body class="bg-[#09090b] text-[#e4e4e7] min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="fixed top-0 left-0 w-60 min-h-screen bg-[#0f0f11] border-r border-[#1c1c1f] flex flex-col z-10">
+    <div class="px-5 py-[22px] border-b border-[#1c1c1f]">
+        <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 bg-[#4f46e5] rounded-[9px] flex items-center justify-center text-base">◈</div>
+            <div>
+                <p class="text-sm font-semibold text-white leading-none">Wallet</p>
+                <p class="text-[11px] text-[#52525b] mt-0.5">Digital Finance</p>
+            </div>
+        </div>
+    </div>
+    <nav class="py-3 flex-1">
+        <div class="px-4 pb-1.5 mt-1">
+            <p class="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-[#3f3f46]">Main</p>
+        </div>
+        <a th:href="@{/dashboard}" class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
+            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">⊞</span>Dashboard
+        </a>
+        <a th:href="@{/accounts}" class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
+            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">◻</span>Accounts
+        </a>
+        <a th:href="@{/transfer}" class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
+            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">↗</span>Transfer
+        </a>
+        <a th:href="@{/transactions}" class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all bg-[#18181b] text-white">
+            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]">≡</span>Transactions
+        </a>
+        <a th:href="@{/analytics}" class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
+            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">◎</span>Analytics
+        </a>
+        <a th:href="@{/reports}" class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
+            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">⋮</span>Reports
+        </a>
+    </nav>
+    <div class="px-4 py-3.5 border-t border-[#1c1c1f]">
+        <div class="flex items-center gap-2.5 mb-2.5">
+            <div class="w-8 h-8 rounded-full bg-[#27272a] flex items-center justify-center text-[13px] text-[#818cf8] font-semibold shrink-0">
+                <span th:text="${userEmail != null ? userEmail.substring(0,1).toUpperCase() : 'U'}">U</span>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-[12.5px] font-medium text-[#e4e4e7] truncate" th:text="${userEmail}">user@email.com</p>
+                <p class="text-[11px] text-[#52525b] mt-px">Active session</p>
+            </div>
+        </div>
+        <a th:href="@{/logout}" class="flex items-center justify-center gap-1.5 w-full px-4 py-2 bg-transparent text-[#71717a] border border-[#27272a] rounded-[9px] text-[12.5px] font-medium no-underline transition-all hover:bg-[#18181b] hover:text-[#e4e4e7]">
+            ⎋ Sign out
+        </a>
+    </div>
+</aside>
+
+<!-- MAIN -->
+<div class="ml-60 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="px-8 py-[22px] border-b border-[#1c1c1f] flex justify-between items-center">
+        <div>
+            <h1 class="text-lg font-semibold text-white">Transactions</h1>
+            <p class="text-[12.5px] text-[#52525b] mt-0.5">Full history of your financial operations</p>
+        </div>
+        <!-- Export button -->
+        <a th:href="@{/transactions/export}"
+           class="flex items-center gap-1.5 px-4 py-2 bg-transparent border border-[#27272a] text-[#71717a] rounded-[9px] text-[12.5px] font-medium no-underline hover:bg-[#18181b] hover:text-[#e4e4e7] transition-all">
+            ↓ Export CSV
+        </a>
+    </header>
+
+    <div class="flex-1 px-8 py-6 flex flex-col gap-5">
+
+        <!-- Stats row -->
+        <div class="grid grid-cols-4 gap-4">
+            <div class="bg-[#111113] border border-[#1c1c1f] rounded-[12px] px-5 py-4">
+                <p class="text-[11px] text-[#52525b] uppercase tracking-[0.08em] font-semibold">Total</p>
+                <p class="mono text-[22px] font-semibold text-white mt-1"
+                   th:text="${totalCount != null ? totalCount : '0'}">0</p>
+                <p class="text-[11.5px] text-[#3f3f46] mt-0.5">transactions</p>
+            </div>
+            <div class="bg-[#111113] border border-[#1c1c1f] rounded-[12px] px-5 py-4">
+                <p class="text-[11px] text-[#52525b] uppercase tracking-[0.08em] font-semibold">Total in</p>
+                <p class="mono text-[22px] font-semibold text-[#34d399] mt-1"
+                   th:text="${totalIn != null ? #numbers.formatDecimal(totalIn, 1, 2) : '0.00'}">0.00</p>
+                <p class="text-[11.5px] text-[#3f3f46] mt-0.5">deposits &amp; refunds</p>
+            </div>
+            <div class="bg-[#111113] border border-[#1c1c1f] rounded-[12px] px-5 py-4">
+                <p class="text-[11px] text-[#52525b] uppercase tracking-[0.08em] font-semibold">Total out</p>
+                <p class="mono text-[22px] font-semibold text-[#fb7185] mt-1"
+                   th:text="${totalOut != null ? #numbers.formatDecimal(totalOut, 1, 2) : '0.00'}">0.00</p>
+                <p class="text-[11.5px] text-[#3f3f46] mt-0.5">withdrawals &amp; fees</p>
+            </div>
+            <div class="bg-[#111113] border border-[#1c1c1f] rounded-[12px] px-5 py-4">
+                <p class="text-[11px] text-[#52525b] uppercase tracking-[0.08em] font-semibold">Net</p>
+                <p class="mono text-[22px] font-semibold mt-1"
+                   th:classappend="${(totalIn != null ? totalIn : 0) >= (totalOut != null ? totalOut : 0) ? 'text-[#34d399]' : 'text-[#fb7185]'}"
+                   th:text="${#numbers.formatDecimal((totalIn != null ? totalIn : 0) - (totalOut != null ? totalOut : 0), 1, 2)}">0.00</p>
+                <p class="text-[11.5px] text-[#3f3f46] mt-0.5">in / out balance</p>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <form th:action="@{/transactions}" method="get"
+              class="bg-[#111113] border border-[#1c1c1f] rounded-[12px] px-5 py-4 flex flex-wrap items-end gap-3">
+
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[11px] font-medium text-[#52525b] uppercase tracking-[0.07em]">Account</label>
+                <select name="accountId" class="form-select" style="min-width:170px">
+                    <option value="">All accounts</option>
+                    <option th:each="acc : ${accounts}"
+                            th:value="${acc.id}"
+                            th:text="${acc.type + ' · ' + acc.currency + ' (ID ' + acc.id + ')'}"
+                            th:selected="${param.accountId != null and param.accountId[0] == acc.id.toString()}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[11px] font-medium text-[#52525b] uppercase tracking-[0.07em]">Type</label>
+                <select name="type" class="form-select" style="min-width:140px">
+                    <option value="">All types</option>
+                    <option value="DEPOSIT"    th:selected="${param.type != null and param.type[0] == 'DEPOSIT'}">Deposit</option>
+                    <option value="WITHDRAWAL" th:selected="${param.type != null and param.type[0] == 'WITHDRAWAL'}">Withdrawal</option>
+                    <option value="TRANSFER"   th:selected="${param.type != null and param.type[0] == 'TRANSFER'}">Transfer</option>
+                    <option value="FEE"        th:selected="${param.type != null and param.type[0] == 'FEE'}">Fee</option>
+                    <option value="REFUND"     th:selected="${param.type != null and param.type[0] == 'REFUND'}">Refund</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[11px] font-medium text-[#52525b] uppercase tracking-[0.07em]">Category</label>
+                <select name="category" class="form-select" style="min-width:140px">
+                    <option value="">All categories</option>
+                    <option value="food"          th:selected="${param.category != null and param.category[0] == 'food'}">Food</option>
+                    <option value="transport"     th:selected="${param.category != null and param.category[0] == 'transport'}">Transport</option>
+                    <option value="entertainment" th:selected="${param.category != null and param.category[0] == 'entertainment'}">Entertainment</option>
+                    <option value="bills"         th:selected="${param.category != null and param.category[0] == 'bills'}">Bills</option>
+                    <option value="other"         th:selected="${param.category != null and param.category[0] == 'other'}">Other</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[11px] font-medium text-[#52525b] uppercase tracking-[0.07em]">From date</label>
+                <input type="date" name="from" class="form-input"
+                       th:value="${param.from != null ? param.from[0] : ''}" />
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[11px] font-medium text-[#52525b] uppercase tracking-[0.07em]">To date</label>
+                <input type="date" name="to" class="form-input"
+                       th:value="${param.to != null ? param.to[0] : ''}" />
+            </div>
+
+            <div class="flex gap-2 ml-auto">
+                <a th:href="@{/transactions}"
+                   class="flex items-center px-3 py-2 text-[12.5px] text-[#71717a] border border-[#27272a] rounded-[9px] no-underline hover:bg-[#18181b] hover:text-[#e4e4e7] transition-all">
+                    Reset
+                </a>
+                <button type="submit"
+                        class="flex items-center gap-1.5 px-4 py-2 bg-[#4f46e5] text-white rounded-[9px] text-[12.5px] font-semibold border-none cursor-pointer hover:bg-[#4338ca] transition-colors">
+                    Apply filters
+                </button>
+            </div>
+        </form>
+
+        <!-- Empty state -->
+        <div th:if="${transactions == null or #lists.isEmpty(transactions)}"
+             class="bg-[#111113] border border-[#1c1c1f] rounded-[14px] py-20 text-center">
+            <p class="text-4xl mb-4 text-[#27272a]">≡</p>
+            <p class="text-[14px] font-medium text-[#71717a]">No transactions found</p>
+            <p class="text-[12.5px] text-[#3f3f46] mt-1.5">Try adjusting the filters or make your first transfer.</p>
+        </div>
+
+        <!-- Table -->
+        <div th:if="${transactions != null and !#lists.isEmpty(transactions)}"
+             class="bg-[#111113] border border-[#1c1c1f] rounded-[14px] overflow-hidden">
+
+            <table class="w-full border-collapse">
+                <thead>
+                <tr class="border-b border-[#1c1c1f]">
+                    <th class="text-left px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#52525b]">Date &amp; time</th>
+                    <th class="text-left px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#52525b]">Type</th>
+                    <th class="text-left px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#52525b]">From → To</th>
+                    <th class="text-left px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#52525b]">Category</th>
+                    <th class="text-left px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#52525b]">Description</th>
+                    <th class="text-left px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#52525b]">Status</th>
+                    <th class="text-right px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#52525b]">Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="tx, stat : ${transactions}"
+                    th:classappend="${stat.odd ? 'bg-[#111113]' : 'bg-[#0f0f11]'}"
+                    class="border-b border-[#1c1c1f] hover:bg-[#18181b] transition-colors">
+
+                    <!-- Date -->
+                    <td class="px-5 py-3.5">
+                        <p class="mono text-[12.5px] text-[#e4e4e7]"
+                           th:text="${#temporals.format(tx.timestamp, 'dd MMM yyyy')}">01 Jan 2025</p>
+                        <p class="mono text-[11px] text-[#52525b] mt-0.5"
+                           th:text="${#temporals.format(tx.timestamp, 'HH:mm:ss')}">00:00:00</p>
+                    </td>
+
+                    <!-- Type badge -->
+                    <td class="px-5 py-3.5">
+                            <span th:switch="${tx.type}">
+                                <span th:case="'DEPOSIT'"
+                                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(52,211,153,0.1)] text-[#34d399]">
+                                    ↓ Deposit
+                                </span>
+                                <span th:case="'WITHDRAWAL'"
+                                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(251,113,133,0.1)] text-[#fb7185]">
+                                    ↑ Withdrawal
+                                </span>
+                                <span th:case="'TRANSFER'"
+                                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(129,140,248,0.1)] text-[#818cf8]">
+                                    ↗ Transfer
+                                </span>
+                                <span th:case="'FEE'"
+                                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(251,191,36,0.1)] text-[#fbbf24]">
+                                    % Fee
+                                </span>
+                                <span th:case="'REFUND'"
+                                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(56,189,248,0.1)] text-[#38bdf8]">
+                                    ↩ Refund
+                                </span>
+                                <span th:case="*"
+                                      class="inline-flex items-center px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[#1c1c1f] text-[#71717a]"
+                                      th:text="${tx.type}">—</span>
+                            </span>
+                    </td>
+
+                    <!-- From → To -->
+                    <td class="px-5 py-3.5">
+                        <div class="flex items-center gap-1.5">
+                                <span class="mono text-[12px] text-[#71717a]"
+                                      th:text="${tx.fromAccount != null ? '#' + tx.fromAccount : '—'}">—</span>
+                            <span class="text-[#3f3f46] text-xs">→</span>
+                            <span class="mono text-[12px] text-[#71717a]"
+                                  th:text="${tx.toAccount != null ? '#' + tx.toAccount : '—'}">—</span>
+                        </div>
+                    </td>
+
+                    <!-- Category -->
+                    <td class="px-5 py-3.5">
+                            <span th:if="${tx.category != null}"
+                                  class="inline-flex px-2 py-0.5 rounded-[5px] text-[11px] font-medium bg-[#1c1c1f] text-[#71717a] capitalize"
+                                  th:text="${tx.category}">—</span>
+                        <span th:if="${tx.category == null}" class="text-[#3f3f46] text-[12px]">—</span>
+                    </td>
+
+                    <!-- Description -->
+                    <td class="px-5 py-3.5 max-w-[180px]">
+                        <p class="text-[12.5px] text-[#71717a] truncate"
+                           th:text="${tx.description != null and !tx.description.isEmpty() ? tx.description : '—'}">—</p>
+                    </td>
+
+                    <!-- Status -->
+                    <td class="px-5 py-3.5">
+                            <span th:switch="${tx.status}">
+                                <span th:case="'COMPLETED'"
+                                      class="inline-flex items-center gap-1 text-[11.5px] font-medium text-[#34d399]">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#34d399] inline-block"></span>Completed
+                                </span>
+                                <span th:case="'PENDING'"
+                                      class="inline-flex items-center gap-1 text-[11.5px] font-medium text-[#fbbf24]">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] inline-block"></span>Pending
+                                </span>
+                                <span th:case="'FAILED'"
+                                      class="inline-flex items-center gap-1 text-[11.5px] font-medium text-[#fb7185]">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#fb7185] inline-block"></span>Failed
+                                </span>
+                                <span th:case="*"
+                                      class="text-[11.5px] text-[#52525b]" th:text="${tx.status}">—</span>
+                            </span>
+                    </td>
+
+                    <!-- Amount -->
+                    <td class="px-5 py-3.5 text-right">
+                            <span th:switch="${tx.type}">
+                                <span th:case="'DEPOSIT'"
+                                      class="mono text-[13.5px] font-semibold text-[#34d399]"
+                                      th:text="'+' + #numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">+0.00</span>
+                                <span th:case="'REFUND'"
+                                      class="mono text-[13.5px] font-semibold text-[#38bdf8]"
+                                      th:text="'+' + #numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">+0.00</span>
+                                <span th:case="'WITHDRAWAL'"
+                                      class="mono text-[13.5px] font-semibold text-[#fb7185]"
+                                      th:text="'-' + #numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">-0.00</span>
+                                <span th:case="'FEE'"
+                                      class="mono text-[13.5px] font-semibold text-[#fbbf24]"
+                                      th:text="'-' + #numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">-0.00</span>
+                                <span th:case="*"
+                                      class="mono text-[13.5px] font-semibold text-[#e4e4e7]"
+                                      th:text="${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">0.00</span>
+                            </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div th:if="${totalPages != null and totalPages > 1}"
+                 class="flex items-center justify-between px-5 py-3.5 border-t border-[#1c1c1f]">
+                <p class="text-[12px] text-[#52525b]">
+                    Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">1</span>
+                    · <span th:text="${totalCount}">0</span> total
+                </p>
+                <div class="flex items-center gap-1.5">
+                    <a th:if="${currentPage > 0}"
+                       th:href="@{/transactions(page=${currentPage - 1}, accountId=${param.accountId}, type=${param.type}, category=${param.category}, from=${param.from}, to=${param.to})}"
+                       class="px-3 py-1.5 text-[12.5px] text-[#71717a] border border-[#27272a] rounded-[7px] no-underline hover:bg-[#18181b] hover:text-[#e4e4e7] transition-all">
+                        ← Prev
+                    </a>
+                    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                          th:if="${i >= currentPage - 2 and i <= currentPage + 2}">
+                        <a th:href="@{/transactions(page=${i}, accountId=${param.accountId}, type=${param.type}, category=${param.category}, from=${param.from}, to=${param.to})}"
+                           th:text="${i + 1}"
+                           th:classappend="${i == currentPage ? 'bg-[#4f46e5] text-white border-[#4f46e5]' : 'text-[#71717a] border-[#27272a] hover:bg-[#18181b] hover:text-[#e4e4e7]'}"
+                           class="px-3 py-1.5 text-[12.5px] border rounded-[7px] no-underline transition-all">1</a>
+                    </span>
+                    <a th:if="${currentPage < totalPages - 1}"
+                       th:href="@{/transactions(page=${currentPage + 1}, accountId=${param.accountId}, type=${param.type}, category=${param.category}, from=${param.from}, to=${param.to})}"
+                       class="px-3 py-1.5 text-[12.5px] text-[#71717a] border border-[#27272a] rounded-[7px] no-underline hover:bg-[#18181b] hover:text-[#e4e4e7] transition-all">
+                        Next →
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
