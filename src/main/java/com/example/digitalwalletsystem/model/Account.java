@@ -13,8 +13,9 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private BigDecimal balance;
@@ -34,17 +35,20 @@ public class Account {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        if (this.balance == null) {
+            this.balance = BigDecimal.ZERO;
+        }
     }
 
     //constructor
     public Account() {
     }
 
-    public Account(Long id, Long userId, BigDecimal balance,
+    public Account(Long id, User user, BigDecimal balance,
                    String currency, String type,
                    String status, LocalDateTime createdAt) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.balance = balance;
         this.currency = currency;
         this.type = type;
@@ -62,12 +66,12 @@ public class Account {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public BigDecimal getBalance() {

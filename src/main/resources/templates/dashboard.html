@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Digital Wallet</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+
+<div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md text-center">
+    <div class="mx-auto h-12 w-12 bg-indigo-50 text-indigo-600 flex items-center justify-center rounded-xl text-2xl mb-4">
+        💼
+    </div>
+
+    <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Digital Wallet</h1>
+    <p class="text-sm text-slate-500 mt-1">Welcome to your personal account!</p>
+
+    <div class="my-6 p-4 bg-slate-50 rounded-xl border border-slate-100 text-left">
+        <span class="text-xs font-medium text-slate-400 uppercase block tracking-wider">Account</span>
+        <span class="text-sm font-semibold text-slate-700 block mt-0.5 break-all" th:text="${userEmail}">user@example.com</span>
+    </div>
+
+    <div class="space-y-3">
+        <div class="p-3 bg-amber-50 text-amber-800 text-xs font-medium rounded-xl border border-amber-100">
+            Lorem
+        </div>
+
+        <a th:href="@{/logout}"
+           class="block w-full text-center bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 rounded-xl transition-colors text-sm shadow-sm">
+            Sign out of the account
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

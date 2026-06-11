@@ -66,4 +66,19 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public long countTotalUsers() {
+        return userRepository.countByRole("USER");
+    }
+
+    public void unblockUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setStatus("ACTIVE");
+        userRepository.save(user);
+    }
 }
