@@ -55,18 +55,39 @@ public class AuthController {
             boolean isAuthenticated = userService.loginUser(loginDto.getEmail(), loginDto.getPassword());
 
             if (isAuthenticated) {
-                session.setAttribute("userEmail", loginDto.getEmail());
+                User user = userService.findUserByEmail(loginDto.getEmail());
+
+
+                if ("BLOCKED".equals(user.getStatus())) {
+                    model.addAttribute("error", "Your account has been suspended. Please contact support.");
+                    return "login"; // Возвращаем форму логина с конкретным текстом ошибки
+                }
+
+
+                session.setAttribute("userEmail", user.getEmail());
+                session.setAttribute("userRole", user.getRole());
+
+                if ("ADMIN".equals(user.getRole())) {
+                    return "redirect:/admin/dashboard";
+                }
+
                 return "redirect:/dashboard";
-            } else {
-                model.addAttribute("error", "Невірний пароль!");
-                return "login";
             }
-        } catch (Exception e) {
+
+
+            model.addAttribute("error", "Invalid email or password");
+            return "login";
+
+        } catch (RuntimeException e) {
+
             model.addAttribute("error", e.getMessage());
+            return "login";
+        } catch (Exception e) {
+
+            model.addAttribute("error", "An error occurred. Please try again later.");
             return "login";
         }
     }
-
 
     //Logout
     @GetMapping("/logout")
