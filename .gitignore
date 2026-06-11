@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Hide admin auto-create class
+src/main/java/com/example/digitalwalletsystem/config/DatabaseLoader.java
