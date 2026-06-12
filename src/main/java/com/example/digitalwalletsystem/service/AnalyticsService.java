@@ -1,5 +1,6 @@
 package com.example.digitalwalletsystem.service;
 
+import com.example.digitalwalletsystem.dto.CategoryStatDto;
 import com.example.digitalwalletsystem.model.Account;
 import com.example.digitalwalletsystem.model.Transaction;
 import com.example.digitalwalletsystem.repository.AccountRepository;
@@ -12,7 +13,6 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class AnalyticsService {
@@ -26,15 +26,20 @@ public class AnalyticsService {
         this.accountRepository = accountRepository;
     }
 
+    // =========================
+    // FETCH TRANSACTIONS
+    // =========================
     public List<Transaction> getTransactions(Long userId, Long accountId, LocalDate from, LocalDate to) {
+
         List<Account> accounts = accountRepository.findByUserId(userId);
 
         List<Long> accountIds = accounts.stream()
                 .map(Account::getId)
                 .filter(id -> accountId == null || id.equals(accountId))
-                .collect(Collectors.toList());
+                .toList();
 
-        List<Transaction> all = new ArrayList<>();
+        Set<Transaction> all = new HashSet<>();
+
         for (Long id : accountIds) {
             all.addAll(transactionRepository.findHistoryByAccountId(id));
         }
@@ -44,25 +49,35 @@ public class AnalyticsService {
                     LocalDate date = t.getTimestamp().toLocalDate();
                     return !date.isBefore(from) && !date.isAfter(to);
                 })
-                .distinct()
                 .sorted(Comparator.comparing(Transaction::getTimestamp).reversed())
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    // WITHDRAWAL, TRANSFER, FEE
-    private boolean isExpense(Transaction t) {
-        String s = t.getStatus();
-        return s != null && (s.equalsIgnoreCase("WITHDRAWAL")
-                || s.equalsIgnoreCase("TRANSFER")
-                || s.equalsIgnoreCase("FEE"));
+    // =========================
+    // TYPE HELPERS (ВАЖНО)
+    // =========================
+    private boolean isFee(Transaction t) {
+        return "FEE".equalsIgnoreCase(t.getType());
     }
 
-    // DEPOSIT, REFUND
     private boolean isIncome(Transaction t) {
-        String s = t.getStatus();
-        return s != null && (s.equalsIgnoreCase("DEPOSIT")
-                || s.equalsIgnoreCase("REFUND"));
+        return t != null
+                && "INCOME".equalsIgnoreCase(t.getType())
+                && !isFee(t);
     }
+
+    private boolean isExpense(Transaction t) {
+        return t != null
+                && (
+                "EXPENSE".equalsIgnoreCase(t.getType())
+                        || "TRANSFER".equalsIgnoreCase(t.getType())
+        )
+                && !isFee(t);
+    }
+
+    // =========================
+    // STATS
+    // =========================
 
     public BigDecimal getTotalSpent(List<Transaction> txs) {
         return txs.stream()
@@ -80,9 +95,11 @@ public class AnalyticsService {
 
     public BigDecimal getAvg(List<Transaction> txs) {
         if (txs.isEmpty()) return BigDecimal.ZERO;
+
         BigDecimal sum = txs.stream()
                 .map(Transaction::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         return sum.divide(BigDecimal.valueOf(txs.size()), 2, RoundingMode.HALF_UP);
     }
 
@@ -98,59 +115,90 @@ public class AnalyticsService {
                 .filter(this::isExpense)
                 .sorted(Comparator.comparing(Transaction::getAmount).reversed())
                 .limit(5)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public Map<String, BigDecimal> getCategoryStats(List<Transaction> txs) {
-        Map<String, BigDecimal> map = new LinkedHashMap<>();
+    // =========================
+    // CATEGORY STATS (FEE IGNORE)
+    // =========================
+    public List<CategoryStatDto> getCategoryStats(List<Transaction> txs) {
+
+        Map<String, CategoryStatDto> map = new LinkedHashMap<>();
+
         for (Transaction t : txs) {
+
+            if (isFee(t)) continue;
+
             String cat = (t.getCategory() != null && !t.getCategory().isBlank())
-                    ? t.getCategory() : "other";
-            map.merge(cat, t.getAmount(), BigDecimal::add);
+                    ? t.getCategory()
+                    : "other";
+
+            map.computeIfAbsent(cat,
+                    k -> new CategoryStatDto(k, BigDecimal.ZERO, 0)
+            );
+
+            CategoryStatDto stat = map.get(cat);
+
+            stat.setTotal(stat.getTotal().add(t.getAmount()));
+            stat.setCount(stat.getCount() + 1);
         }
-        return map.entrySet().stream()
-                .sorted(Map.Entry.<String, BigDecimal>comparingByValue().reversed())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (a, b) -> a,
-                        LinkedHashMap::new));
+
+        return map.values().stream()
+                .sorted(Comparator.comparing(CategoryStatDto::getTotal).reversed())
+                .toList();
     }
 
+    public List<String> getCategoryLabels(List<Transaction> txs) {
+        return getCategoryStats(txs).stream()
+                .map(CategoryStatDto::getCategory)
+                .toList();
+    }
+
+    public List<BigDecimal> getCategoryAmounts(List<Transaction> txs) {
+        return getCategoryStats(txs).stream()
+                .map(CategoryStatDto::getTotal)
+                .toList();
+    }
+
+    // =========================
+    // MONTH STATS (EXPENSE ONLY)
+    // =========================
     public List<String> getMonthLabels(LocalDate from, LocalDate to) {
+
         List<String> labels = new ArrayList<>();
         YearMonth cur = YearMonth.from(from);
         YearMonth end = YearMonth.from(to);
+
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMM yyyy");
+
         while (!cur.isAfter(end)) {
             labels.add(cur.atDay(1).format(fmt));
             cur = cur.plusMonths(1);
         }
+
         return labels;
     }
 
     public List<BigDecimal> getMonthAmounts(List<Transaction> txs, LocalDate from, LocalDate to) {
+
         List<BigDecimal> amounts = new ArrayList<>();
         YearMonth cur = YearMonth.from(from);
         YearMonth end = YearMonth.from(to);
+
         while (!cur.isAfter(end)) {
+
             YearMonth month = cur;
+
             BigDecimal sum = txs.stream()
                     .filter(this::isExpense)
                     .filter(t -> YearMonth.from(t.getTimestamp()).equals(month))
                     .map(Transaction::getAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
+
             amounts.add(sum);
             cur = cur.plusMonths(1);
         }
+
         return amounts;
-    }
-
-    public List<String> getCategoryLabels(List<Transaction> txs) {
-        return new ArrayList<>(getCategoryStats(txs).keySet());
-    }
-
-    public List<BigDecimal> getCategoryAmounts(List<Transaction> txs) {
-        return new ArrayList<>(getCategoryStats(txs).values());
     }
 }
