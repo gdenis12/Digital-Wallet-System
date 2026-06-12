@@ -81,45 +81,80 @@
 
     <!-- Nav -->
     <nav class="py-3 flex-1">
-        <div class="px-4 pb-1.5 mt-1">
-            <p class="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-[#3f3f46]">Main</p>
+        <div th:if="${session.userRole == 'ADMIN'}">
+            <div class="px-4 pb-1.5 mt-1">
+                <p class="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-[#3f3f46]">Admin Management</p>
+            </div>
+
+            <a href="/admin/dashboard"
+               th:class="${currentUri == '/admin/dashboard'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/admin/dashboard'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⊞</span>
+                Overview
+            </a>
+
+            <a href="/admin/users"
+               th:class="${currentUri == '/admin/users'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/admin/users'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">◻</span>
+                Users
+            </a>
+
+            <a href="/admin/transactions"
+               th:class="${currentUri == '/admin/transactions'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/admin/transactions'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">≡</span>
+                Transactions
+            </a>
         </div>
 
-        <a th:href="@{/dashboard}" href="/dashboard"
-           class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white">
-            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]">⊞</span>
-            Dashboard
-        </a>
+        <div class="px-4 pb-1.5 mt-1">
+            <p class="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-[#3f3f46]">Management</p>
+        </div>
+        <div>
+            <a href="/dashboard"
+               th:class="${currentUri == '/dashboard'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/dashboard'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⊞</span>
+                Dashboard
+            </a>
 
-        <a th:href="@{/accounts}" href="/accounts"
-           class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
-            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">◻</span>
-            Accounts
-        </a>
+            <a href="/accounts"
+               th:class="${currentUri == '/accounts'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/accounts'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">◻</span>
+                Accounts
+            </a>
 
-        <a th:href="@{/transfer}" href="/transfer"
-           class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
-            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">↗</span>
-            Transfer
-        </a>
+            <a href="/transfer"
+               th:class="${currentUri == '/transfer'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/transfer'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">≡</span>
+                Transfer
+            </a>
 
-        <a th:href="@{/transactions}" href="/transactions"
-           class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
-            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">≡</span>
-            Transactions
-        </a>
+            <a href="/transactions"
+               th:class="${currentUri == '/transactions'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/transactions'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⋮</span>
+                Transactions
+            </a>
 
-        <a th:href="@{/analytics}" href="/analytics"
-           class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
-            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">◎</span>
-            Analytics
-        </a>
-
-        <a th:href="@{/reports}" href="/reports"
-           class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
-            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">⋮</span>
-            Reports
-        </a>
+            <a href="/analytics"
+               th:class="${currentUri == '/analytics'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/analytics'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⋮</span>
+                Analytics
+            </a>
+        </div>
     </nav>
 
     <!-- User -->
@@ -161,7 +196,7 @@
     <div class="px-8 py-7 flex flex-col gap-7">
 
         <!-- STAT CHIPS -->
-        <div class="grid grid-cols-4 gap-3.5">
+        <div class="grid grid-cols-2 gap-3.5">
 
             <div class="bg-[#111113] border border-[#1c1c1f] rounded-[10px] px-[18px] py-3.5">
                 <p class="text-[11.5px] text-[#52525b] font-medium">Accounts</p>
@@ -175,21 +210,6 @@
                    th:text="${transactions != null ? transactions.size() : 0}">0</p>
             </div>
 
-            <div class="bg-[#111113] border border-[#1c1c1f] rounded-[10px] px-[18px] py-3.5">
-                <p class="text-[11.5px] text-[#52525b] font-medium">System</p>
-                <div class="mt-2 flex items-center gap-1.5">
-                    <span class="w-[7px] h-[7px] rounded-full bg-[#10b981] shadow-[0_0_6px_#10b981]"></span>
-                    <p class="text-sm font-semibold text-[#34d399]">Operational</p>
-                </div>
-            </div>
-
-            <div class="bg-[#111113] border border-[#1c1c1f] rounded-[10px] px-[18px] py-3.5">
-                <p class="text-[11.5px] text-[#52525b] font-medium">Security</p>
-                <div class="mt-2 flex items-center gap-1.5">
-                    <span class="w-[7px] h-[7px] rounded-full bg-[#6366f1] shadow-[0_0_6px_#6366f1]"></span>
-                    <p class="text-sm font-semibold text-[#818cf8]">Protected</p>
-                </div>
-            </div>
 
         </div>
 

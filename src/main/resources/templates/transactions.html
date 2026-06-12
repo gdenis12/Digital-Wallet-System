@@ -43,27 +43,80 @@
         </div>
     </div>
     <nav class="py-3 flex-1">
-        <div class="px-4 pb-1.5 mt-1">
-            <p class="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-[#3f3f46]">Main</p>
+        <div th:if="${session.userRole == 'ADMIN'}">
+            <div class="px-4 pb-1.5 mt-1">
+                <p class="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-[#3f3f46]">Admin Management</p>
+            </div>
+
+            <a href="/admin/dashboard"
+               th:class="${currentUri == '/admin/dashboard'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/admin/dashboard'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⊞</span>
+                Overview
+            </a>
+
+            <a href="/admin/users"
+               th:class="${currentUri == '/admin/users'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/admin/users'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">◻</span>
+                Users
+            </a>
+
+            <a href="/admin/transactions"
+               th:class="${currentUri == '/admin/transactions'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/admin/transactions'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">≡</span>
+                Transactions
+            </a>
         </div>
-        <a th:href="@{/dashboard}" class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
-            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">⊞</span>Dashboard
-        </a>
-        <a th:href="@{/accounts}" class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
-            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">◻</span>Accounts
-        </a>
-        <a th:href="@{/transfer}" class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
-            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">↗</span>Transfer
-        </a>
-        <a th:href="@{/transactions}" class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all bg-[#18181b] text-white">
-            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]">≡</span>Transactions
-        </a>
-        <a th:href="@{/analytics}" class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
-            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">◎</span>Analytics
-        </a>
-        <a th:href="@{/reports}" class="flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]">
-            <span class="w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]">⋮</span>Reports
-        </a>
+
+        <div class="px-4 pb-1.5 mt-1">
+            <p class="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-[#3f3f46]">Management</p>
+        </div>
+        <div>
+            <a href="/dashboard"
+               th:class="${currentUri == '/dashboard'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/dashboard'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⊞</span>
+                Dashboard
+            </a>
+
+            <a href="/accounts"
+               th:class="${currentUri == '/accounts'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/accounts'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">◻</span>
+                Accounts
+            </a>
+
+            <a href="/transfer"
+               th:class="${currentUri == '/transfer'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/transfer'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">≡</span>
+                Transfer
+            </a>
+
+            <a href="/transactions"
+               th:class="${currentUri == '/transactions'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/transactions'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⋮</span>
+                Transactions
+            </a>
+
+            <a href="/analytics"
+               th:class="${currentUri == '/analytics'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/analytics'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⋮</span>
+                Analytics
+            </a>
+        </div>
     </nav>
     <div class="px-4 py-3.5 border-t border-[#1c1c1f]">
         <div class="flex items-center gap-2.5 mb-2.5">
@@ -308,16 +361,16 @@
                             <span th:switch="${tx.type}">
                                 <span th:case="'DEPOSIT'"
                                       class="mono text-[13.5px] font-semibold text-[#34d399]"
-                                      th:text="'+' + #numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">+0.00</span>
+                                      th:text="'+' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">+0.00</span>
                                 <span th:case="'REFUND'"
                                       class="mono text-[13.5px] font-semibold text-[#38bdf8]"
-                                      th:text="'+' + #numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">+0.00</span>
+                                      th:text="'+' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">+0.00</span>
                                 <span th:case="'WITHDRAWAL'"
                                       class="mono text-[13.5px] font-semibold text-[#fb7185]"
-                                      th:text="'-' + #numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">-0.00</span>
+                                      th:text="'-' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">-0.00</span>
                                 <span th:case="'FEE'"
                                       class="mono text-[13.5px] font-semibold text-[#fbbf24]"
-                                      th:text="'-' + #numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">-0.00</span>
+                                      th:text="'-' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">-0.00</span>
                                 <span th:case="*"
                                       class="mono text-[13.5px] font-semibold text-[#e4e4e7]"
                                       th:text="${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">0.00</span>

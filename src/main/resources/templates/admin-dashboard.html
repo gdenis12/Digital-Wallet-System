@@ -2,83 +2,285 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard - Wallet System</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
-<body class="bg-slate-50 font-sans">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Wallet Control Panel</title>
 
-<div class="min-h-screen flex flex-col">
-    <header class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-md">
-        <h1 class="text-xl font-bold tracking-wide">Wallet Control Panel ⚙️</h1>
-        <div class="flex items-center gap-4">
-            <span class="text-sm text-slate-300" th:text="${adminEmail}">admin@wallet.com</span>
-            <a href="/login" class="bg-red-600 hover:bg-red-700 text-xs px-3 py-1.5 rounded transition-all">Sign Out</a>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style type="text/tailwindcss">
+        @theme {
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --color-bg:        #09090b;
+            --color-surface:   #111113;
+            --color-sidebar:   #0f0f11;
+            --color-border:    #1c1c1f;
+            --color-muted:     #52525b;
+            --color-subtle:    #71717a;
+            --color-text:      #e4e4e7;
+            --color-white:     #ffffff;
+            --color-hover:     #18181b;
+            --color-chip:      #27272a;
+            --color-indigo:    #4f46e5;
+            --color-indigo-lt: #818cf8;
+            --color-green:     #34d399;
+            --color-yellow:    #fbbf24;
+            --color-red:       #fb7185;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--color-bg);
+            color: var(--color-text);
+            min-height: 100vh;
+        }
+
+        .mono { font-family: var(--font-mono); }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 2px; }
+    </style>
+</head>
+<body class="bg-[#09090b] text-[#e4e4e7]">
+
+<!-- SIDEBAR -->
+<aside class="fixed top-0 left-0 w-60 min-h-screen bg-[#0f0f11] border-r border-[#1c1c1f] flex flex-col">
+
+    <!-- Logo -->
+    <div class="px-5 py-[22px] border-b border-[#1c1c1f]">
+        <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 bg-[#4f46e5] rounded-[9px] flex items-center justify-center text-base">⚙</div>
+            <div>
+                <p class="text-sm font-semibold text-white leading-none">Admin</p>
+                <p class="text-[11px] text-[#52525b] mt-0.5">Control Panel</p>
+            </div>
         </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="py-3 flex-1">
+        <div th:if="${session.userRole == 'ADMIN'}">
+            <div class="px-4 pb-1.5 mt-1">
+                <p class="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-[#3f3f46]">Admin Management</p>
+            </div>
+
+            <a href="/admin/dashboard"
+               th:class="${currentUri == '/admin/dashboard'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/admin/dashboard'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⊞</span>
+                Overview
+            </a>
+
+            <a href="/admin/users"
+               th:class="${currentUri == '/admin/users'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/admin/users'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">◻</span>
+                Users
+            </a>
+
+            <a href="/admin/transactions"
+               th:class="${currentUri == '/admin/transactions'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/admin/transactions'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">≡</span>
+                Transactions
+            </a>
+        </div>
+
+        <div class="px-4 pb-1.5 mt-1">
+            <p class="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-[#3f3f46]">Management</p>
+        </div>
+        <div>
+            <a href="/dashboard"
+               th:class="${currentUri == '/dashboard'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/dashboard'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⊞</span>
+                Dashboard
+            </a>
+
+            <a href="/accounts"
+               th:class="${currentUri == '/accounts'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/accounts'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">◻</span>
+                Accounts
+            </a>
+
+            <a href="/transfer"
+               th:class="${currentUri == '/transfer'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/transfer'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">≡</span>
+                Transfer
+            </a>
+
+            <a href="/transactions"
+               th:class="${currentUri == '/transactions'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/transactions'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⋮</span>
+                Transactions
+            </a>
+
+            <a href="/analytics"
+               th:class="${currentUri == '/analytics'}
+             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
+             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+                <span th:class="${currentUri == '/analytics'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⋮</span>
+                Analytics
+            </a>
+        </div>
+    </nav>
+
+    <!-- Admin user -->
+    <div class="px-4 py-3.5 border-t border-[#1c1c1f]">
+        <div class="flex items-center gap-2.5 mb-2.5">
+            <div class="w-8 h-8 rounded-full bg-[#27272a] flex items-center justify-center text-[13px] text-[#818cf8] font-semibold shrink-0">
+                <span th:text="${adminEmail != null ? adminEmail.substring(0,1).toUpperCase() : 'A'}">A</span>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-[12.5px] font-medium text-[#e4e4e7] truncate"
+                   th:text="${adminEmail}">admin@wallet.com</p>
+                <p class="text-[11px] text-[#52525b] mt-px">Administrator</p>
+            </div>
+        </div>
+        <a href="/login"
+           class="flex items-center justify-center gap-1.5 w-full px-4 py-2 bg-transparent text-[#71717a] border border-[#27272a] rounded-[9px] text-[12.5px] font-medium no-underline transition-all duration-150 hover:bg-[#18181b] hover:text-[#e4e4e7]">
+            ⎋ Sign out
+        </a>
+    </div>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="ml-60 min-h-screen">
+
+    <!-- Top bar -->
+    <header class="px-8 py-[22px] border-b border-[#1c1c1f] flex justify-between items-center">
+        <div>
+            <h1 class="text-lg font-semibold text-white">System Overview</h1>
+            <p class="text-[12.5px] text-[#52525b] mt-0.5">Real-time database statistics and user management</p>
+        </div>
+        <span class="inline-flex items-center gap-1.5 px-3 py-[7px] rounded-[9px] bg-[rgba(16,185,129,0.07)] border border-[rgba(16,185,129,0.15)] text-[#34d399] text-[12px] font-semibold">
+            <span class="w-[6px] h-[6px] rounded-full bg-[#10b981] shadow-[0_0_5px_#10b981]"></span>
+            System Operational
+        </span>
     </header>
 
-    <main class="flex-1 p-6 max-w-7xl w-full mx-auto">
-        <div class="mb-6">
-            <h2 class="text-2xl font-bold text-slate-800">System Overview</h2>
-            <p class="text-sm text-slate-500">Real-time database statistics and user management.</p>
+    <!-- Page body -->
+    <div class="px-8 py-7 flex flex-col gap-7">
+
+        <!-- STAT CHIPS -->
+        <div class="grid grid-cols-2 gap-3.5">
+
+            <div class="bg-[#111113] border border-[#1c1c1f] rounded-[10px] px-[22px] py-4">
+                <p class="text-[11.5px] text-[#52525b] font-medium uppercase tracking-wider">Total Registered Clients</p>
+                <p class="mono text-[30px] font-semibold text-white mt-2 leading-none"
+                   th:text="${totalUsers}">0</p>
+            </div>
+
+            <div class="bg-[#111113] border border-[#1c1c1f] rounded-[10px] px-[22px] py-4">
+                <p class="text-[11.5px] text-[#52525b] font-medium uppercase tracking-wider">Estimated System Volume</p>
+                <p class="mono text-[30px] font-semibold text-[#34d399] mt-2 leading-none">
+                    $<span th:text="${systemVolume}">0</span>
+                </p>
+            </div>
+
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-xl shadow-xs border border-slate-200">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Registered Clients</p>
-                <h3 class="text-3xl font-black text-slate-800 mt-1" th:text="${totalUsers}">0</h3>
-            </div>
-            <div class="bg-white p-6 rounded-xl shadow-xs border border-slate-200">
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Estimated System Volume</p>
-                <h3 class="text-3xl font-black text-emerald-600 mt-1" th:text="${'$' + systemVolume}">$0</h3>
-            </div>
-        </div>
+        <!-- USER MANAGEMENT TABLE -->
+        <div class="bg-[#111113] border border-[#1c1c1f] rounded-[14px] p-5">
 
-        <div class="bg-white rounded-xl shadow-xs border border-slate-200 p-6">
-            <h3 class="text-lg font-bold text-slate-800 mb-4">User Management</h3>
+            <div class="flex justify-between items-center mb-[18px]">
+                <p class="text-[11px] font-semibold tracking-[0.1em] uppercase text-[#52525b]">User Management</p>
+            </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                    <tr class="border-b border-slate-200 text-slate-400 text-xs uppercase tracking-wider">
-                        <th class="py-3 px-4">ID</th>
-                        <th class="py-3 px-4">Name</th>
-                        <th class="py-3 px-4">Email</th>
-                        <th class="py-3 px-4">Role</th>
-                        <th class="py-3 px-4">Status</th>
-                        <th class="py-3 px-4 text-right">Actions</th>
+                    <tr class="border-b border-[#1c1c1f] text-[#52525b] text-[10.5px] uppercase tracking-wider">
+                        <th class="py-3 px-3 font-semibold">ID</th>
+                        <th class="py-3 px-3 font-semibold">Name</th>
+                        <th class="py-3 px-3 font-semibold">Email</th>
+                        <th class="py-3 px-3 font-semibold">Role</th>
+                        <th class="py-3 px-3 font-semibold">Status</th>
+                        <th class="py-3 px-3 font-semibold text-right">Actions</th>
                     </tr>
                     </thead>
-                    <tbody class="text-sm text-slate-700 divide-y divide-slate-100">
-                    <tr th:each="user : ${users}" class="hover:bg-slate-50/75 transition-colors">
-                        <td class="py-3 px-4 font-mono text-xs text-slate-400" th:text="${user.id}">1</td>
-                        <td class="py-3 px-4 font-semibold text-slate-900" th:text="${user.name}">John Doe</td>
-                        <td class="py-3 px-4 text-slate-500" th:text="${user.email}">john@example.com</td>
-                        <td class="py-3 px-4">
-                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600" th:text="${user.role}">USER</span>
+                    <tbody class="text-sm text-[#e4e4e7] divide-y divide-[#1c1c1f]">
+                    <tr th:each="user : ${users}" class="hover:bg-[#18181b] transition-colors duration-100">
+
+                        <td class="py-3 px-3">
+                            <span class="mono text-[11.5px] text-[#52525b]" th:text="${user.id}">1</span>
                         </td>
-                        <td class="py-3 px-4">
-                            <span th:if="${user.status == 'ACTIVE'}" class="px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-700">Active</span>
-                            <span th:if="${user.status == 'BLOCKED'}" class="px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">Blocked</span>
+
+                        <td class="py-3 px-3">
+                            <span class="text-[13.5px] font-medium text-white" th:text="${user.name}">John Doe</span>
                         </td>
-                        <td class="py-3 px-4 text-right">
-                            <form th:if="${user.status == 'ACTIVE' and user.role != 'ADMIN'}" th:action="@{/admin/users/block}" method="post" class="inline">
+
+                        <td class="py-3 px-3">
+                            <span class="text-[13px] text-[#71717a]" th:text="${user.email}">john@example.com</span>
+                        </td>
+
+                        <td class="py-3 px-3">
+                            <span th:if="${user.role == 'ADMIN'}"
+                                  class="inline-flex items-center px-2 py-[3px] rounded-full text-[11px] font-semibold tracking-[0.04em] uppercase bg-[rgba(79,70,229,0.1)] text-[#818cf8] border border-[rgba(79,70,229,0.2)]"
+                                  th:text="${user.role}">ADMIN</span>
+                            <span th:if="${user.role != 'ADMIN'}"
+                                  class="inline-flex items-center px-2 py-[3px] rounded-full text-[11px] font-semibold tracking-[0.04em] uppercase bg-[#27272a] text-[#71717a] border border-[#323235]"
+                                  th:text="${user.role}">USER</span>
+                        </td>
+
+                        <td class="py-3 px-3">
+                            <span th:if="${user.status == 'ACTIVE'}"
+                                  class="inline-flex items-center gap-1 px-2 py-[3px] rounded-full text-[11px] font-semibold tracking-[0.04em] uppercase bg-[rgba(16,185,129,0.08)] text-[#34d399] border border-[rgba(16,185,129,0.15)]">
+                                <span class="w-[5px] h-[5px] rounded-full bg-[#10b981]"></span>
+                                Active
+                            </span>
+                            <span th:if="${user.status == 'BLOCKED'}"
+                                  class="inline-flex items-center gap-1 px-2 py-[3px] rounded-full text-[11px] font-semibold tracking-[0.04em] uppercase bg-[rgba(244,63,94,0.08)] text-[#fb7185] border border-[rgba(244,63,94,0.15)]">
+                                <span class="w-[5px] h-[5px] rounded-full bg-[#fb7185]"></span>
+                                Blocked
+                            </span>
+                        </td>
+
+                        <td class="py-3 px-3 text-right">
+                            <form th:if="${user.status == 'ACTIVE' and user.role != 'ADMIN'}"
+                                  th:action="@{/admin/users/block}" method="post" class="inline">
                                 <input type="hidden" name="userId" th:value="${user.id}"/>
-                                <button type="submit" class="bg-red-50 hover:bg-red-100 text-red-600 text-xs px-2.5 py-1 rounded font-medium transition-colors">Block</button>
+                                <button type="submit"
+                                        class="inline-flex items-center gap-1 px-2.5 py-[5px] rounded-[7px] text-[12px] font-semibold bg-[rgba(244,63,94,0.08)] text-[#fb7185] border border-[rgba(244,63,94,0.15)] hover:bg-[rgba(244,63,94,0.15)] transition-colors duration-150">
+                                    Block
+                                </button>
                             </form>
 
-                            <form th:if="${user.status == 'BLOCKED'}" th:action="@{/admin/users/unblock}" method="post" class="inline">
+                            <form th:if="${user.status == 'BLOCKED'}"
+                                  th:action="@{/admin/users/unblock}" method="post" class="inline">
                                 <input type="hidden" name="userId" th:value="${user.id}"/>
-                                <button type="submit" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-600 text-xs px-2.5 py-1 rounded font-medium transition-colors">Unblock</button>
+                                <button type="submit"
+                                        class="inline-flex items-center gap-1 px-2.5 py-[5px] rounded-[7px] text-[12px] font-semibold bg-[rgba(16,185,129,0.08)] text-[#34d399] border border-[rgba(16,185,129,0.15)] hover:bg-[rgba(16,185,129,0.15)] transition-colors duration-150">
+                                    Unblock
+                                </button>
                             </form>
 
-                            <span th:if="${user.role == 'ADMIN'}" class="text-xs text-slate-400 italic">System Owner</span>
+                            <span th:if="${user.role == 'ADMIN'}"
+                                  class="text-[12px] text-[#52525b] italic">System Owner</span>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
+
         </div>
-    </main>
+
+    </div>
 </div>
 
 </body>
