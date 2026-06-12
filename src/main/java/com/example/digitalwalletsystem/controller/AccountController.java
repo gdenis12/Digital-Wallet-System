@@ -1,5 +1,5 @@
 package com.example.digitalwalletsystem.controller;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.digitalwalletsystem.model.Account;
 import com.example.digitalwalletsystem.service.AccountService;
 import jakarta.servlet.http.HttpSession;
@@ -70,11 +70,15 @@ public class AccountController {
     @PostMapping("/accounts/deposit")
     public String deposit(@RequestParam Long accountId,
                           @RequestParam BigDecimal amount,
-                          HttpSession session) {
-        if (getUserId(session) == null) {
-            return "redirect:/login";
+                          HttpSession session,
+                          RedirectAttributes redirectAttributes) {
+        if (getUserId(session) == null) return "redirect:/login";
+        try {
+            accountService.deposit(accountId, amount);
+            redirectAttributes.addFlashAttribute("success", "Deposit successful");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
-        accountService.deposit(accountId, amount);
         return "redirect:/accounts";
     }
 
@@ -90,12 +94,22 @@ public class AccountController {
     }
 
     @PostMapping("/accounts/block/{id}")
-    public String block(@PathVariable Long id,
-                        HttpSession session) {
-        if (getUserId(session) == null) {
-            return "redirect:/login";
-        }
+    public String block(@PathVariable Long id, HttpSession session) {
+        if (getUserId(session) == null) return "redirect:/login";
         accountService.blockAccount(id);
+        return "redirect:/accounts";
+    }
+
+    @PostMapping("/accounts/toggle-block/{id}")
+    public String toggleBlock(@PathVariable Long id,
+                              HttpSession session,
+                              RedirectAttributes redirectAttributes) {
+        if (getUserId(session) == null) return "redirect:/login";
+        try {
+            accountService.toggleBlock(id);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/accounts";
     }
 }

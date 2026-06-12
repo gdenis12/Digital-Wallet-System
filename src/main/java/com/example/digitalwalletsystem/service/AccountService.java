@@ -3,6 +3,7 @@ package com.example.digitalwalletsystem.service;
 import com.example.digitalwalletsystem.model.Account;
 import com.example.digitalwalletsystem.model.User;
 import com.example.digitalwalletsystem.repository.AccountRepository;
+import com.example.digitalwalletsystem.repository.TransactionRepository;
 import com.example.digitalwalletsystem.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,11 +17,14 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final TransactionRepository transactionRepository;
 
     public AccountService(AccountRepository accountRepository,
-                          UserRepository userRepository) {
+                          UserRepository userRepository,
+                          TransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     public Account createAccount(Account account, Long userId) {
@@ -76,6 +80,20 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
+    public Account toggleBlock(Long accountId) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+
+        if ("BLOCKED".equals(account.getStatus())) {
+            account.setStatus("ACTIVE");
+        } else {
+            account.setStatus("BLOCKED");
+        }
+
+        return accountRepository.save(account);
+    }
+
+    // Keep for backwards compatibility (admin panel, etc.)
     public Account blockAccount(Long accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
