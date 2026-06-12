@@ -112,4 +112,24 @@ public class AccountController {
         }
         return "redirect:/accounts";
     }
+
+    @GetMapping("/admin/accounts")
+    public String adminAccounts(HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("userId");
+        String userRole = (String) session.getAttribute("userRole");
+
+        if (userId == null) return "redirect:/login";
+        if (!"ADMIN".equals(userRole)) return "redirect:/dashboard";
+
+        try {
+
+            List<Account> allAccounts = accountService.getAccountsByUser(null);
+            model.addAttribute("accounts", allAccounts);
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to load global accounts: " + e.getMessage());
+            model.addAttribute("accounts", List.of());
+        }
+
+        return "admin-accounts";
+    }
 }

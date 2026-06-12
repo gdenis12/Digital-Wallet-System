@@ -107,7 +107,7 @@ public class ScheduledAccountService {
                     "FEE"
             );
 
-            tx.setType("EXPENSE"); // ✅ FIX CRITICAL
+            tx.setType("EXPENSE"); 
 
             transactionRepository.save(tx);
 
