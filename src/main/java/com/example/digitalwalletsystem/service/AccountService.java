@@ -100,4 +100,9 @@ public class AccountService {
         account.setStatus("BLOCKED");
         return accountRepository.save(account);
     }
+
+    @Transactional(readOnly = true)
+    public List<Account> getAllAccounts() {
+        return accountRepository.findByUserId(null);
+    }
 }

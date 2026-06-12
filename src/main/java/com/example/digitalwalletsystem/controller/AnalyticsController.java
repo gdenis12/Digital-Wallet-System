@@ -45,19 +45,24 @@ public class AnalyticsController {
             List<Account> accounts = accountService.getAccountsByUser(userId);
             model.addAttribute("accounts", accounts);
 
+
             List<Transaction> transactions = analyticsService.getTransactions(userId, accountId, from, to);
 
-            model.addAttribute("totalSpent",         analyticsService.getTotalSpent(transactions));
-            model.addAttribute("totalIncome",        analyticsService.getTotalIncome(transactions));
+
+            model.addAttribute("totalSpent",         analyticsService.getTotalSpent(transactions, accountId));
+            model.addAttribute("totalIncome",        analyticsService.getTotalIncome(transactions, accountId));
             model.addAttribute("avgTransaction",     analyticsService.getAvg(transactions));
             model.addAttribute("largestTransaction", analyticsService.getLargest(transactions));
             model.addAttribute("txCount",            transactions.size());
-            model.addAttribute("top5",               analyticsService.getTop5(transactions));
-            model.addAttribute("categoryStats",      analyticsService.getCategoryStats(transactions));
+
+            model.addAttribute("top5",               analyticsService.getTop5(transactions, accountId));
+            model.addAttribute("categoryStats",      analyticsService.getCategoryStats(transactions, accountId));
             model.addAttribute("monthLabels",        analyticsService.getMonthLabels(from, to));
-            model.addAttribute("monthAmounts",       analyticsService.getMonthAmounts(transactions, from, to));
-            model.addAttribute("categoryLabels",     analyticsService.getCategoryLabels(transactions));
-            model.addAttribute("categoryAmounts",    analyticsService.getCategoryAmounts(transactions));
+            model.addAttribute("monthAmounts",       analyticsService.getMonthAmounts(transactions, from, to, accountId));
+
+
+            model.addAttribute("categoryLabels",     analyticsService.getCategoryLabels(transactions, accountId));
+            model.addAttribute("categoryAmounts",    analyticsService.getCategoryAmounts(transactions, accountId));
 
         } catch (Exception e) {
             model.addAttribute("error", "Failed to load analytics: " + e.getMessage());

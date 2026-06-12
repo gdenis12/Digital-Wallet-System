@@ -56,11 +56,11 @@
                 Overview
             </a>
 
-            <a href="/admin/users"
-               th:class="${currentUri == '/admin/users'}
+            <a href="/admin/accounts"
+               th:class="${currentUri == '/admin/accounts'}
              ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
              : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
-                <span th:class="${currentUri == '/admin/users'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">◻</span>
+                <span th:class="${currentUri == '/admin/accounts'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">◻</span>
                 Users
             </a>
 
@@ -274,107 +274,118 @@
                     th:classappend="${stat.odd ? 'bg-[#111113]' : 'bg-[#0f0f11]'}"
                     class="border-b border-[#1c1c1f] hover:bg-[#18181b] transition-colors">
 
-                    <!-- Date -->
                     <td class="px-5 py-3.5">
                         <p class="mono text-[12.5px] text-[#e4e4e7]"
-                           th:text="${#temporals.format(tx.timestamp, 'dd MMM yyyy')}">01 Jan 2025</p>
+                           th:text="${tx.timestamp != null ? #temporals.format(tx.timestamp, 'dd MMM yyyy') : '—'}">01 Jan 2025</p>
                         <p class="mono text-[11px] text-[#52525b] mt-0.5"
-                           th:text="${#temporals.format(tx.timestamp, 'HH:mm:ss')}">00:00:00</p>
+                           th:text="${tx.timestamp != null ? #temporals.format(tx.timestamp, 'HH:mm:ss') : '—'}">00:00:00</p>
                     </td>
 
-                    <!-- Type badge -->
                     <td class="px-5 py-3.5">
-                            <span th:switch="${tx.type}">
-                                <span th:case="'DEPOSIT'"
-                                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(52,211,153,0.1)] text-[#34d399]">
-                                    ↓ Deposit
-                                </span>
-                                <span th:case="'WITHDRAWAL'"
-                                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(251,113,133,0.1)] text-[#fb7185]">
-                                    ↑ Withdrawal
-                                </span>
-                                <span th:case="'TRANSFER'"
-                                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(129,140,248,0.1)] text-[#818cf8]">
-                                    ↗ Transfer
-                                </span>
-                                <span th:case="'FEE'"
-                                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(251,191,36,0.1)] text-[#fbbf24]">
-                                    % Fee
-                                </span>
-                                <span th:case="'REFUND'"
-                                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(56,189,248,0.1)] text-[#38bdf8]">
-                                    ↩ Refund
-                                </span>
-                                <span th:case="*"
-                                      class="inline-flex items-center px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[#1c1c1f] text-[#71717a]"
-                                      th:text="${tx.type}">—</span>
-                            </span>
+            <span th:switch="${tx.type}">
+                <span th:case="'INCOME'"
+                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(52,211,153,0.1)] text-[#34d399]">
+                    ↓ Deposit
+                </span>
+                <span th:case="'DEPOSIT'"
+                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(52,211,153,0.1)] text-[#34d399]">
+                    ↓ Deposit
+                </span>
+                <span th:case="'EXPENSE'"
+                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(251,113,133,0.1)] text-[#fb7185]">
+                    ↑ Expense
+                </span>
+                <span th:case="'WITHDRAWAL'"
+                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(251,113,133,0.1)] text-[#fb7185]">
+                    ↑ Withdrawal
+                </span>
+                <span th:case="'TRANSFER'"
+                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(129,140,248,0.1)] text-[#818cf8]">
+                    ↗ Transfer
+                </span>
+                <span th:case="'FEE'"
+                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(251,191,36,0.1)] text-[#fbbf24]">
+                    % Fee
+                </span>
+                <span th:case="'REFUND'"
+                      class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[rgba(56,189,248,0.1)] text-[#38bdf8]">
+                    ↩ Refund
+                </span>
+                <span th:case="*"
+                      class="inline-flex items-center px-2.5 py-1 rounded-[6px] text-[11.5px] font-semibold bg-[#1c1c1f] text-[#71717a]"
+                      th:text="${tx.type}">—</span>
+            </span>
                     </td>
 
-                    <!-- From → To -->
                     <td class="px-5 py-3.5">
                         <div class="flex items-center gap-1.5">
-                                <span class="mono text-[12px] text-[#71717a]"
-                                      th:text="${tx.fromAccount != null ? '#' + tx.fromAccount : '—'}">—</span>
+                <span class="mono text-[12px] text-[#71717a]"
+                      th:text="${tx.fromAccount != null ? '#' + tx.fromAccount.id : '—'}">—</span>
                             <span class="text-[#3f3f46] text-xs">→</span>
                             <span class="mono text-[12px] text-[#71717a]"
-                                  th:text="${tx.toAccount != null ? '#' + tx.toAccount : '—'}">—</span>
+                                  th:text="${tx.toAccount != null ? '#' + tx.toAccount.id : '—'}">—</span>
                         </div>
                     </td>
 
-                    <!-- Category -->
                     <td class="px-5 py-3.5">
-                            <span th:if="${tx.category != null}"
-                                  class="inline-flex px-2 py-0.5 rounded-[5px] text-[11px] font-medium bg-[#1c1c1f] text-[#71717a] capitalize"
-                                  th:text="${tx.category}">—</span>
+            <span th:if="${tx.category != null}"
+                  class="inline-flex px-2 py-0.5 rounded-[5px] text-[11px] font-medium bg-[#1c1c1f] text-[#71717a] capitalize"
+                  th:text="${tx.category}">—</span>
                         <span th:if="${tx.category == null}" class="text-[#3f3f46] text-[12px]">—</span>
                     </td>
 
-                    <!-- Description -->
                     <td class="px-5 py-3.5 max-w-[180px]">
                         <p class="text-[12.5px] text-[#71717a] truncate"
                            th:text="${tx.description != null and !tx.description.isEmpty() ? tx.description : '—'}">—</p>
                     </td>
 
-                    <!-- Status -->
                     <td class="px-5 py-3.5">
-                            <span th:switch="${tx.status}">
-                                <span th:case="'COMPLETED'"
-                                      class="inline-flex items-center gap-1 text-[11.5px] font-medium text-[#34d399]">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-[#34d399] inline-block"></span>Completed
-                                </span>
-                                <span th:case="'PENDING'"
-                                      class="inline-flex items-center gap-1 text-[11.5px] font-medium text-[#fbbf24]">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] inline-block"></span>Pending
-                                </span>
-                                <span th:case="'FAILED'"
-                                      class="inline-flex items-center gap-1 text-[11.5px] font-medium text-[#fb7185]">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-[#fb7185] inline-block"></span>Failed
-                                </span>
-                                <span th:case="*"
-                                      class="text-[11.5px] text-[#52525b]" th:text="${tx.status}">—</span>
-                            </span>
+            <span th:switch="${tx.status}">
+                <span th:case="'SUCCESS'"
+                      class="inline-flex items-center gap-1 text-[11.5px] font-medium text-[#34d399]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#34d399] inline-block"></span>Completed
+                </span>
+                <span th:case="'COMPLETED'"
+                      class="inline-flex items-center gap-1 text-[11.5px] font-medium text-[#34d399]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#34d399] inline-block"></span>Completed
+                </span>
+                <span th:case="'PENDING'"
+                      class="inline-flex items-center gap-1 text-[11.5px] font-medium text-[#fbbf24]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] inline-block"></span>Pending
+                </span>
+                <span th:case="'FAILED'"
+                      class="inline-flex items-center gap-1 text-[11.5px] font-medium text-[#fb7185]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#fb7185] inline-block"></span>Failed
+                </span>
+                <span th:case="*"
+                      class="text-[11.5px] text-[#52525b]" th:text="${tx.status}">—</span>
+            </span>
                     </td>
 
-                    <!-- Amount -->
                     <td class="px-5 py-3.5 text-right">
-                            <span th:switch="${tx.type}">
-                                <span th:case="'DEPOSIT'"
-                                      class="mono text-[13.5px] font-semibold text-[#34d399]"
-                                      th:text="'+' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">+0.00</span>
-                                <span th:case="'REFUND'"
-                                      class="mono text-[13.5px] font-semibold text-[#38bdf8]"
-                                      th:text="'+' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">+0.00</span>
-                                <span th:case="'WITHDRAWAL'"
-                                      class="mono text-[13.5px] font-semibold text-[#fb7185]"
-                                      th:text="'-' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">-0.00</span>
-                                <span th:case="'FEE'"
-                                      class="mono text-[13.5px] font-semibold text-[#fbbf24]"
-                                      th:text="'-' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">-0.00</span>
-                                <span th:case="*"
-                                      class="mono text-[13.5px] font-semibold text-[#e4e4e7]"
-                                      th:text="${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">0.00</span>
-                            </span>
+            <span th:switch="${tx.type}">
+                <span th:case="'INCOME'"
+                      class="mono text-[13.5px] font-semibold text-[#34d399]"
+                      th:text="'+' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">+0.00</span>
+                <span th:case="'DEPOSIT'"
+                      class="mono text-[13.5px] font-semibold text-[#34d399]"
+                      th:text="'+' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">+0.00</span>
+                <span th:case="'REFUND'"
+                      class="mono text-[13.5px] font-semibold text-[#38bdf8]"
+                      th:text="'+' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">+0.00</span>
+                <span th:case="'EXPENSE'"
+                      class="mono text-[13.5px] font-semibold text-[#fb7185]"
+                      th:text="'-' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">-0.00</span>
+                <span th:case="'WITHDRAWAL'"
+                      class="mono text-[13.5px] font-semibold text-[#fb7185]"
+                      th:text="'-' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">-0.00</span>
+                <span th:case="'FEE'"
+                      class="mono text-[13.5px] font-semibold text-[#fbbf24]"
+                      th:text="'-' + ${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">-0.00</span>
+                <span th:case="*"
+                      class="mono text-[13.5px] font-semibold text-[#e4e4e7]"
+                      th:text="${#numbers.formatDecimal(tx.amount, 1, 2) + ' ' + tx.currency}">0.00</span>
+            </span>
                     </td>
                 </tr>
                 </tbody>

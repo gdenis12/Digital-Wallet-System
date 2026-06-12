@@ -15,7 +15,7 @@ import java.util.List;
 public class AdminDashboardController {
     private final UserService userService;
 
-    // Внедряем UserService через конструктор
+
     public AdminDashboardController(UserService userService) {
         this.userService = userService;
     }
@@ -29,29 +29,29 @@ public class AdminDashboardController {
             return "redirect:/login";
         }
 
-        // 1. Вытягиваем реальную статистику
+
         long totalUsers = userService.countTotalUsers();
         List<User> usersList = userService.getAllUsers();
 
-        // 2. Передаем всё в Thymeleaf
+
         model.addAttribute("adminEmail", email);
         model.addAttribute("totalUsers", totalUsers);
         model.addAttribute("users", usersList);
 
-        // Временная заглушка для объема системы (можно заменить на реальный подсчет из AccountRepository)
+
         model.addAttribute("systemVolume", 150000);
 
         return "admin-dashboard";
     }
 
-    // Обработчик блокировки
+
     @PostMapping("/admin/users/block")
     public String blockUser(@RequestParam("userId") Long userId) {
         userService.blockUser(userId);
-        return "redirect:/admin/dashboard"; // Перезагружаем страницу, чтобы увидеть изменения
+        return "redirect:/admin/dashboard";
     }
 
-    // Обработчик разблокировки
+
     @PostMapping("/admin/users/unblock")
     public String unblockUser(@RequestParam("userId") Long userId) {
         userService.unblockUser(userId);
