@@ -50,20 +50,24 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@ModelAttribute("loginDto") UserLoginDto loginDto, HttpSession session, Model model) {
+    public String loginUser(@ModelAttribute("loginDto") UserLoginDto loginDto,
+                            HttpSession session,
+                            Model model) {
         try {
-            boolean isAuthenticated = userService.loginUser(loginDto.getEmail(), loginDto.getPassword());
+
+            User user = userService.findUserByEmail(loginDto.getEmail());
+
+            boolean isAuthenticated = user != null
+                    && userService.loginUser(loginDto.getEmail(), loginDto.getPassword());
 
             if (isAuthenticated) {
-                User user = userService.findUserByEmail(loginDto.getEmail());
-
 
                 if ("BLOCKED".equals(user.getStatus())) {
                     model.addAttribute("error", "Your account has been suspended. Please contact support.");
-                    return "login"; // Возвращаем форму логина с конкретным текстом ошибки
+                    return "login";
                 }
 
-
+                session.setAttribute("userId", user.getId());
                 session.setAttribute("userEmail", user.getEmail());
                 session.setAttribute("userRole", user.getRole());
 
@@ -74,16 +78,13 @@ public class AuthController {
                 return "redirect:/dashboard";
             }
 
-
             model.addAttribute("error", "Invalid email or password");
             return "login";
 
         } catch (RuntimeException e) {
-
             model.addAttribute("error", e.getMessage());
             return "login";
         } catch (Exception e) {
-
             model.addAttribute("error", "An error occurred. Please try again later.");
             return "login";
         }
