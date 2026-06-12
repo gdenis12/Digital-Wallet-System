@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accounts — Digital Wallet</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -15,7 +14,6 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 2px; }
-
         .form-input, .form-select {
             background: #0f0f11;
             border: 1px solid #27272a;
@@ -30,7 +28,6 @@
         }
         .form-input:focus, .form-select:focus { border-color: #4f46e5; }
         .form-select option { background: #111113; }
-
         .drawer {
             position: fixed; top: 0; right: 0; height: 100vh; width: 380px;
             background: #111113; border-left: 1px solid #1c1c1f;
@@ -45,8 +42,6 @@
 
 <!-- SIDEBAR -->
 <aside class="fixed top-0 left-0 w-60 min-h-screen bg-[#0f0f11] border-r border-[#1c1c1f] flex flex-col">
-
-    <!-- Logo -->
     <div class="px-5 py-[22px] border-b border-[#1c1c1f]">
         <div class="flex items-center gap-2.5">
             <div class="w-8 h-8 bg-[#4f46e5] rounded-[9px] flex items-center justify-center text-base">◈</div>
@@ -56,86 +51,48 @@
             </div>
         </div>
     </div>
-
-    <!-- Nav -->
     <nav class="py-3 flex-1">
         <div th:if="${session.userRole == 'ADMIN'}">
             <div class="px-4 pb-1.5 mt-1">
                 <p class="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-[#3f3f46]">Admin Management</p>
             </div>
-
-            <a href="/admin/dashboard"
-               th:class="${currentUri == '/admin/dashboard'}
-             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
-             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+            <a href="/admin/dashboard" th:class="${currentUri == '/admin/dashboard'} ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white' : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
                 <span th:class="${currentUri == '/admin/dashboard'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⊞</span>
                 Overview
             </a>
-
-            <a href="/admin/users"
-               th:class="${currentUri == '/admin/users'}
-             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
-             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+            <a href="/admin/users" th:class="${currentUri == '/admin/users'} ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white' : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
                 <span th:class="${currentUri == '/admin/users'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">◻</span>
                 Users
             </a>
-
-            <a href="/admin/transactions"
-               th:class="${currentUri == '/admin/transactions'}
-             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
-             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+            <a href="/admin/transactions" th:class="${currentUri == '/admin/transactions'} ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white' : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
                 <span th:class="${currentUri == '/admin/transactions'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">≡</span>
                 Transactions
             </a>
         </div>
-
         <div class="px-4 pb-1.5 mt-1">
             <p class="text-[10.5px] font-semibold tracking-[0.08em] uppercase text-[#3f3f46]">Management</p>
         </div>
-        <div>
-            <a href="/dashboard"
-               th:class="${currentUri == '/dashboard'}
-             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
-             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
-                <span th:class="${currentUri == '/dashboard'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⊞</span>
-                Dashboard
-            </a>
-
-            <a href="/accounts"
-               th:class="${currentUri == '/accounts'}
-             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
-             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
-                <span th:class="${currentUri == '/accounts'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">◻</span>
-                Accounts
-            </a>
-
-            <a href="/transfer"
-               th:class="${currentUri == '/transfer'}
-             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
-             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
-                <span th:class="${currentUri == '/transfer'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">≡</span>
-                Transfer
-            </a>
-
-            <a href="/transactions"
-               th:class="${currentUri == '/transactions'}
-             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
-             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
-                <span th:class="${currentUri == '/transactions'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⋮</span>
-                Transactions
-            </a>
-
-            <a href="/analytics"
-               th:class="${currentUri == '/analytics'}
-             ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white'
-             : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
-                <span th:class="${currentUri == '/analytics'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⋮</span>
-                Analytics
-            </a>
-        </div>
+        <a href="/dashboard" th:class="${currentUri == '/dashboard'} ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white' : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+            <span th:class="${currentUri == '/dashboard'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⊞</span>
+            Dashboard
+        </a>
+        <a href="/accounts" th:class="${currentUri == '/accounts'} ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white' : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+            <span th:class="${currentUri == '/accounts'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">◻</span>
+            Accounts
+        </a>
+        <a href="/transfer" th:class="${currentUri == '/transfer'} ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white' : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+            <span th:class="${currentUri == '/transfer'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">≡</span>
+            Transfer
+        </a>
+        <a href="/transactions" th:class="${currentUri == '/transactions'} ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white' : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+            <span th:class="${currentUri == '/transactions'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⋮</span>
+            Transactions
+        </a>
+        <a href="/analytics" th:class="${currentUri == '/analytics'} ? 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 bg-[#18181b] text-white' : 'flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[13.5px] font-medium mx-2 my-px transition-all duration-150 text-[#71717a] hover:bg-[#18181b] hover:text-[#e4e4e7]'">
+            <span th:class="${currentUri == '/analytics'} ? 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1e1e2e] text-[#818cf8]' : 'w-8 h-8 rounded-[7px] flex items-center justify-center text-sm shrink-0 bg-[#1a1a1a] text-[#71717a]'">⋮</span>
+            Analytics
+        </a>
     </nav>
-
-    <!-- User -->
     <div class="px-4 py-3.5 border-t border-[#1c1c1f]">
         <div class="flex items-center gap-2.5 mb-2.5">
             <div class="w-8 h-8 rounded-full bg-[#27272a] flex items-center justify-center text-[13px] text-[#818cf8] font-semibold shrink-0">
@@ -146,24 +103,20 @@
                 <p class="text-[11px] text-[#52525b] mt-px">Active session</p>
             </div>
         </div>
-        <a th:href="@{/logout}" href="/logout"
-           class="flex items-center justify-center gap-1.5 w-full px-4 py-2 bg-transparent text-[#71717a] border border-[#27272a] rounded-[9px] text-[12.5px] font-medium no-underline transition-all duration-150 hover:bg-[#18181b] hover:text-[#e4e4e7]">
+        <a th:href="@{/logout}" class="flex items-center justify-center gap-1.5 w-full px-4 py-2 bg-transparent text-[#71717a] border border-[#27272a] rounded-[9px] text-[12.5px] font-medium no-underline transition-all duration-150 hover:bg-[#18181b] hover:text-[#e4e4e7]">
             ⎋ Sign out
         </a>
     </div>
-
 </aside>
 
 <!-- MAIN -->
 <div class="ml-60 min-h-screen">
-
-    <!-- Header -->
     <header class="px-8 py-[22px] border-b border-[#1c1c1f] flex justify-between items-center">
         <div>
             <h1 class="text-lg font-semibold text-white">Accounts</h1>
             <p class="text-[12.5px] text-[#52525b] mt-0.5">Manage your wallets and balances</p>
         </div>
-        <button onclick="openDrawer()"
+        <button id="btn-new-account"
                 class="inline-flex items-center gap-1.5 px-5 py-[10px] bg-[#4f46e5] text-white rounded-[9px] text-[13px] font-semibold border-none cursor-pointer transition-colors duration-150 hover:bg-[#4338ca]">
             + New account
         </button>
@@ -184,19 +137,14 @@
              th:if="${accounts != null and !#lists.isEmpty(accounts)}">
 
             <p class="text-[11px] font-semibold tracking-[0.1em] uppercase text-[#52525b] mb-4">
-                Your accounts ·
-                <span th:text="${accounts.size()}">0</span>
+                Your accounts · <span th:text="${accounts.size()}">0</span>
             </p>
 
             <div th:each="acc : ${accounts}"
                  class="flex items-center gap-4 py-4 border-b border-[#1c1c1f] last:border-b-0">
 
                 <!-- Type chip -->
-                <span th:classappend="${acc.type == 'credit'
-                        ? 'bg-[rgba(244,63,94,0.1)] text-[#fb7185]'
-                        : (acc.type == 'savings'
-                            ? 'bg-[rgba(16,185,129,0.1)] text-[#34d399]'
-                            : 'bg-[rgba(99,102,241,0.12)] text-[#818cf8]')}"
+                <span th:classappend="${acc.type == 'credit' ? 'bg-[rgba(244,63,94,0.1)] text-[#fb7185]' : (acc.type == 'savings' ? 'bg-[rgba(16,185,129,0.1)] text-[#34d399]' : 'bg-[rgba(99,102,241,0.12)] text-[#818cf8]')}"
                       class="px-2.5 py-1 rounded-md text-[11px] font-semibold tracking-[0.06em] uppercase shrink-0"
                       th:text="${acc.type}">debit</span>
 
@@ -213,30 +161,37 @@
                 </div>
 
                 <!-- Status badge -->
-                <span th:classappend="${acc.status == 'ACTIVE'
-                        ? 'bg-[rgba(16,185,129,0.1)] text-[#34d399] border border-[rgba(16,185,129,0.2)]'
-                        : 'bg-[rgba(244,63,94,0.1)] text-[#fb7185] border border-[rgba(244,63,94,0.2)]'}"
+                <span th:classappend="${acc.status == 'ACTIVE' ? 'bg-[rgba(16,185,129,0.1)] text-[#34d399] border border-[rgba(16,185,129,0.2)]' : 'bg-[rgba(244,63,94,0.1)] text-[#fb7185] border border-[rgba(244,63,94,0.2)]'}"
                       class="inline-flex items-center gap-1 px-2 py-[3px] rounded-full text-[11px] font-semibold tracking-[0.04em] uppercase"
                       th:text="${acc.status}">ACTIVE</span>
 
                 <!-- Actions -->
                 <div class="flex gap-2">
+                    <!-- History -->
                     <a th:href="@{/transactions(accountId=${acc.id})}"
-                       th:attr="href='/transactions?accountId=' + ${acc.id}"
                        class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-transparent text-[#71717a] border border-[#27272a] rounded-lg text-xs font-medium no-underline cursor-pointer transition-all duration-150 hover:bg-[#18181b] hover:text-[#e4e4e7]">
                         History
                     </a>
 
-                    <form th:if="${acc.status == 'ACTIVE'}"
-                          th:action="@{/accounts/block/{id}(id=${acc.id})}" method="post"
-                          style="display:inline;">
-                        <button type="submit"
+                    <!-- Deposit button — data-* attributes, NO th:onclick -->
+                    <button th:if="${acc.status == 'ACTIVE'}"
+                            class="deposit-btn inline-flex items-center gap-1 px-3.5 py-2 bg-[rgba(99,102,241,0.1)] text-[#818cf8] border border-[rgba(99,102,241,0.2)] rounded-lg text-xs font-medium cursor-pointer transition-all duration-150 hover:bg-[rgba(99,102,241,0.2)]"
+                            th:attr="data-account-id=${acc.id},data-currency=${acc.currency}">
+                        + Deposit
+                    </button>
+
+                    <!-- Toggle Block / Unblock — plain form, no JS needed -->
+                    <form th:action="@{/accounts/toggle-block/{id}(id=${acc.id})}" method="post" style="display:inline;">
+                        <button th:if="${acc.status == 'ACTIVE'}" type="submit"
                                 class="inline-flex items-center gap-1 px-3.5 py-2 bg-[rgba(244,63,94,0.08)] text-[#fb7185] border border-[rgba(244,63,94,0.2)] rounded-lg text-xs font-medium cursor-pointer transition-all duration-150 hover:bg-[rgba(244,63,94,0.15)]">
                             Block
                         </button>
+                        <button th:if="${acc.status == 'BLOCKED'}" type="submit"
+                                class="inline-flex items-center gap-1 px-3.5 py-2 bg-[rgba(16,185,129,0.08)] text-[#34d399] border border-[rgba(16,185,129,0.2)] rounded-lg text-xs font-medium cursor-pointer transition-all duration-150 hover:bg-[rgba(16,185,129,0.15)]">
+                            Unblock
+                        </button>
                     </form>
                 </div>
-
             </div>
         </div>
 
@@ -246,7 +201,7 @@
             <p class="text-4xl mb-3 text-[#27272a]">◻</p>
             <p class="text-[15px] font-medium text-[#71717a]">No accounts yet</p>
             <p class="text-[13px] text-[#3f3f46] mt-1.5">Create your first wallet to get started.</p>
-            <button onclick="openDrawer()"
+            <button id="btn-new-account-empty"
                     class="mt-5 inline-flex items-center gap-1.5 px-5 py-[10px] bg-[#4f46e5] text-white rounded-[9px] text-[13px] font-semibold border-none cursor-pointer transition-colors duration-150 hover:bg-[#4338ca]">
                 + Create account
             </button>
@@ -256,24 +211,15 @@
 </div>
 
 <!-- OVERLAY -->
-<div id="overlay" onclick="closeDrawer()"
-     class="fixed inset-0 bg-black/60 z-40 hidden"
-     style="display:none;"></div>
+<div id="overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:40;"></div>
 
-<!-- DRAWER -->
-<div class="drawer" id="drawer">
-
+<!-- DRAWER: New Account -->
+<div class="drawer" id="drawer-new-account">
     <div class="px-6 py-6 border-b border-[#1c1c1f] flex justify-between items-center">
-        <div>
-            <p class="text-[15px] font-semibold text-white">New account</p>
-        </div>
-        <button onclick="closeDrawer()"
-                class="bg-transparent border-none text-[#52525b] text-lg cursor-pointer p-1 hover:text-[#e4e4e7] transition-colors">✕</button>
+        <p class="text-[15px] font-semibold text-white">New account</p>
+        <button id="close-drawer-btn" class="bg-transparent border-none text-[#52525b] text-lg cursor-pointer p-1 hover:text-[#e4e4e7] transition-colors">✕</button>
     </div>
-
-    <form th:action="@{/accounts/create}" action="/accounts/create" method="post"
-          class="px-6 py-6 flex flex-col gap-[18px] flex-1">
-
+    <form th:action="@{/accounts/create}" method="post" class="px-6 py-6 flex flex-col gap-[18px] flex-1">
         <div class="flex flex-col gap-1.5">
             <label class="text-xs font-medium text-[#71717a]">Account type</label>
             <select name="type" class="form-select" required>
@@ -283,7 +229,6 @@
                 <option value="savings">Savings</option>
             </select>
         </div>
-
         <div class="flex flex-col gap-1.5">
             <label class="text-xs font-medium text-[#71717a]">Currency</label>
             <select name="currency" class="form-select" required>
@@ -294,7 +239,6 @@
                 <option value="GBP">GBP — British Pound</option>
             </select>
         </div>
-
         <div class="mt-auto pt-3 border-t border-[#1c1c1f]">
             <button type="submit"
                     class="flex items-center justify-center gap-1.5 w-full px-5 py-[10px] bg-[#4f46e5] text-white rounded-[9px] text-[13px] font-semibold border-none cursor-pointer transition-colors duration-150 hover:bg-[#4338ca]">
@@ -302,24 +246,97 @@
             </button>
         </div>
     </form>
+</div>
 
+<!-- DRAWER: Deposit -->
+<div class="drawer" id="drawer-deposit">
+    <div class="px-6 py-6 border-b border-[#1c1c1f] flex justify-between items-center">
+        <div>
+            <p class="text-[15px] font-semibold text-white">Deposit funds</p>
+            <p class="text-[12px] text-[#52525b] mt-0.5" id="deposit-subtitle">Add money to your account</p>
+        </div>
+        <button id="close-deposit-btn" class="bg-transparent border-none text-[#52525b] text-lg cursor-pointer p-1 hover:text-[#e4e4e7] transition-colors">✕</button>
+    </div>
+    <form th:action="@{/accounts/deposit}" method="post" class="px-6 py-6 flex flex-col gap-[18px] flex-1">
+        <input type="hidden" name="accountId" id="deposit-account-id">
+        <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-medium text-[#71717a]">Amount</label>
+            <div class="relative">
+                <input type="number" name="amount" id="deposit-amount"
+                       class="form-input pr-16"
+                       placeholder="0.00" min="0.01" step="0.01" required>
+                <span id="deposit-currency-label"
+                      class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#52525b] mono pointer-events-none">USD</span>
+            </div>
+        </div>
+        <div class="flex flex-col gap-1.5">
+            <p class="text-xs font-medium text-[#71717a]">Quick select</p>
+            <div class="grid grid-cols-4 gap-2">
+                <button type="button" data-amount="10"  class="quick-amount px-3 py-2 bg-[#18181b] border border-[#27272a] rounded-lg text-xs font-medium text-[#71717a] cursor-pointer hover:border-[#4f46e5] hover:text-[#818cf8] transition-all">10</button>
+                <button type="button" data-amount="50"  class="quick-amount px-3 py-2 bg-[#18181b] border border-[#27272a] rounded-lg text-xs font-medium text-[#71717a] cursor-pointer hover:border-[#4f46e5] hover:text-[#818cf8] transition-all">50</button>
+                <button type="button" data-amount="100" class="quick-amount px-3 py-2 bg-[#18181b] border border-[#27272a] rounded-lg text-xs font-medium text-[#71717a] cursor-pointer hover:border-[#4f46e5] hover:text-[#818cf8] transition-all">100</button>
+                <button type="button" data-amount="500" class="quick-amount px-3 py-2 bg-[#18181b] border border-[#27272a] rounded-lg text-xs font-medium text-[#71717a] cursor-pointer hover:border-[#4f46e5] hover:text-[#818cf8] transition-all">500</button>
+            </div>
+        </div>
+        <div class="mt-auto pt-3 border-t border-[#1c1c1f]">
+            <button type="submit"
+                    class="flex items-center justify-center gap-1.5 w-full px-5 py-[10px] bg-[#4f46e5] text-white rounded-[9px] text-[13px] font-semibold border-none cursor-pointer transition-colors duration-150 hover:bg-[#4338ca]">
+                Confirm deposit
+            </button>
+        </div>
+    </form>
 </div>
 
 <script>
-    const overlay = document.getElementById('overlay');
-    const drawer  = document.getElementById('drawer');
+    const overlay        = document.getElementById('overlay');
+    const drawerNew      = document.getElementById('drawer-new-account');
+    const drawerDeposit  = document.getElementById('drawer-deposit');
+    let   activeDrawer   = null;
 
-    function openDrawer() {
+    function openDrawer(drawer) {
+        if (activeDrawer) activeDrawer.classList.remove('open');
+        activeDrawer = drawer;
         drawer.classList.add('open');
         overlay.style.display = 'block';
         document.body.style.overflow = 'hidden';
     }
+
     function closeDrawer() {
-        drawer.classList.remove('open');
+        if (activeDrawer) activeDrawer.classList.remove('open');
+        activeDrawer = null;
         overlay.style.display = 'none';
         document.body.style.overflow = '';
     }
-</script>
 
+    // New account buttons
+    document.getElementById('btn-new-account').addEventListener('click', () => openDrawer(drawerNew));
+    const emptyBtn = document.getElementById('btn-new-account-empty');
+    if (emptyBtn) emptyBtn.addEventListener('click', () => openDrawer(drawerNew));
+
+    // Close buttons
+    document.getElementById('close-drawer-btn').addEventListener('click', closeDrawer);
+    document.getElementById('close-deposit-btn').addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+
+    // Deposit buttons — read data-* attributes (safe, no th:onclick needed)
+    document.querySelectorAll('.deposit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const accountId = btn.dataset.accountId;
+            const currency  = btn.dataset.currency;
+            document.getElementById('deposit-account-id').value   = accountId;
+            document.getElementById('deposit-amount').value        = '';
+            document.getElementById('deposit-currency-label').textContent = currency;
+            document.getElementById('deposit-subtitle').textContent = 'Account #' + accountId + ' · ' + currency;
+            openDrawer(drawerDeposit);
+        });
+    });
+
+    // Quick amount buttons
+    document.querySelectorAll('.quick-amount').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById('deposit-amount').value = btn.dataset.amount;
+        });
+    });
+</script>
 </body>
 </html>

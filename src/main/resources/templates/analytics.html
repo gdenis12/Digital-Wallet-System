@@ -268,24 +268,48 @@
 
             <!-- Category breakdown table -->
             <div class="bg-[#111113] border border-[#1c1c1f] rounded-[14px] p-5 flex flex-col gap-4">
-                <p class="text-[11px] font-semibold tracking-[0.1em] uppercase text-[#52525b]">Category breakdown</p>
+                <p class="text-[11px] font-semibold tracking-[0.1em] uppercase text-[#52525b]">
+                    Category breakdown
+                </p>
+
                 <div th:if="${categoryStats == null or #lists.isEmpty(categoryStats)}"
-                     class="text-[12.5px] text-[#3f3f46] py-6 text-center">No data for the selected period.</div>
-                <div th:if="${categoryStats != null and !#lists.isEmpty(categoryStats)}" class="flex flex-col gap-3">
-                    <div th:each="cs : ${categoryStats}" class="flex flex-col gap-1.5">
+                     class="text-[12.5px] text-[#3f3f46] py-6 text-center">
+                    No data for the selected period.
+                </div>
+
+                <div th:if="${categoryStats != null and !#lists.isEmpty(categoryStats)}"
+                     class="flex flex-col gap-3">
+
+                    <div th:each="cs : ${categoryStats}"
+                         th:with="percent=${totalSpent != null and totalSpent > 0 ? (cs.total / totalSpent * 100) : 0}"
+                         class="flex flex-col gap-1.5">
+
                         <div class="flex justify-between items-center">
-                            <span class="text-[12.5px] text-[#e4e4e7] capitalize" th:text="${cs.category}">—</span>
+                <span class="text-[12.5px] text-[#e4e4e7] capitalize"
+                      th:text="${cs.category}">
+                    —
+                </span>
+
                             <span class="mono text-[12.5px] text-[#fb7185]"
-                                  th:text="${#numbers.formatDecimal(cs.total, 1, 2)}">0.00</span>
+                                  th:text="${#numbers.formatDecimal(cs.total, 1, 2)}">
+                    0.00
+                </span>
                         </div>
+
                         <div class="h-1.5 bg-[#1c1c1f] rounded-full overflow-hidden">
                             <div class="h-full bg-[#4f46e5] rounded-full transition-all"
-                                 th:style="'width:' + (totalSpent != null and totalSpent > 0 ? #numbers.formatDecimal((cs.total / totalSpent) * 100, 1, 1) : '0') + '%'"></div>
+                                 th:style="'width: ' + ${percent} + '%'">
+                            </div>
                         </div>
-                        <p class="text-[11px] text-[#52525b]"
-                           th:text="${cs.count} + ' transactions · ' + (totalSpent != null and totalSpent > 0 ? #numbers.formatDecimal((cs.total / totalSpent) * 100, 1, 1) : '0') + '%'">—</p>
+
+                        <p class="text-[11px] text-[#52525b]">
+                            <span th:text="${cs.count}">0</span> transactions ·
+                            <span th:text="${#numbers.formatDecimal(percent, 1, 1)}">0</span>%
+                        </p>
+
                     </div>
                 </div>
+            </div>
             </div>
         </div>
 
